@@ -5,6 +5,7 @@ let ArticleSchema = new mongoose.Schema(
         title: String,
         description: String,
         feature_img: String,
+        guid: String,
         claps: Number,
         tomatos: Number,
         date: { type: Date, default: Date.now },
@@ -20,7 +21,9 @@ let ArticleSchema = new mongoose.Schema(
                 },
                 text: String
             }
-        ]
+        ],
+        categories: [String],
+        automatedPost: { type: Boolean, default: false }
     }
 )
 ArticleSchema.methods.clap = function () {

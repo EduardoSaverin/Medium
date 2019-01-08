@@ -36,9 +36,10 @@ module.exports = {
         }
     },
     getAll: (req, res, next) => {
-        Article.find(req.params.id)
+        Article.find({})
             .populate('author')
             .populate('comments.author').sort({ 'date': -1 }).exec((err, article) => {
+                console.log(article);
                 if (err)
                     res.status(500).send(err);
                 else if (!article)

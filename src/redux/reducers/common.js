@@ -1,5 +1,5 @@
 // Article Constants
-export const LOAD_ARTICLE = 'LOAD_ARTICLE';
+export const LOAD_ARTICLE = 'LOAD_ARTICLES';
 export const VIEW_ARTICLE = 'VIEW_ARTICLE';
 export const CLAP_ARTICLE = 'CLAP_ARTICLE';
 export const THROW_TOMATO = 'THROW_TOMATO';

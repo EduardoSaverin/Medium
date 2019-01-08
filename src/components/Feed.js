@@ -1,38 +1,39 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { loadArticles } from './../redux/actions/actions';
+import { loadArticles, clap } from './../redux/actions/actions';
 import AsideFeed from './AsideFeed';
+import { formatDate } from '../utils/customs';
 
 class Feed extends React.Component {
     componentDidMount() {
         this.props.loadArticles();
     }
     render() {
+        console.log('Articles in Render', this.props.articles);
         const articles = this.props.articles.map((article) =>
-            <div className="post-panel">
+            <div className="post-panel" key={article._id}>
                 <div className="post-metadata">
                     <img alt="" className="avatar-image" src={article.author.provider_pic} height="40" width="40" />
                     <div className="post-info">
                         <div className="PopoverLink">
                             <span className="popover-link" data-reactroot=""><a href={`/profile/${article.author._id}`}>{article.author.name}</a></span></div>
-                        <small>Posted on {article.date}</small>
+                        <small>Posted on {formatDate(new Date(article.date))}</small>
                     </div>
                 </div>
-                {article.feature_img.length > 0 ? <div class="post-picture-wrapper">
+                {(article.feature_img && article.feature_img.length > 0) ? <div className="post-picture-wrapper">
                     <img src={article.feature_img} alt="Thumb" />
                 </div> : ''}
                 <div className="main-body">
                     <h3 className="post-title"><a href={`/articleview/${article._id}`} >{article.title}</a></h3>
                     <div className="post-body">
-                        <p className="" dangerouslySetInnerHTML={{ __html: article.description }}></p>
+                        <p className="" dangerouslySetInnerHTML={{ __html: article.text }}></p>
                     </div>
                     <a className="read-more" href={`/articleview/${article._id}`}>Read more</a>
                 </div>
                 <div className="post-stats clearfix">
                     <div className="pull-left">
                         <div className="like-button-wrapper">
-                            <form className="button_to" method="get" action="">
-                                <button className="like-button" data-behavior="trigger-overlay" type="submit"><i className="fa fa-heart-o"></i><span className="hide-text">Like</span></button></form>
+                            <button className="like-button" onClick={this.props.clap.bind(this, article._id)} data-behavior="trigger-overlay"><i className="fa fa-heart-o"></i><span className="hide-text">Like</span></button>
                             <span className="like-count">{article.claps}</span>
                         </div>
                     </div>
@@ -67,4 +68,4 @@ const mapStateToProps = state => {
         articles: state.articles.articles
     }
 }
-export default connect(mapStateToProps, { loadArticles })(Feed);
+export default connect(mapStateToProps, { loadArticles, clap })(Feed);

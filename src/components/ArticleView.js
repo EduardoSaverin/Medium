@@ -3,24 +3,20 @@ import { connect } from 'react-redux';
 import { getArticle, clap, follow } from './../redux/actions/actions';
 import PropTypes from 'prop-types';
 import FollowButton from './FollowButton';
-
-const mapStateToProps = state => {
-    return {
-        _article: state.articles.article,
-        user: state.authUser.user
-    }
-}
+import { formatDate } from '../utils/customs';
 
 class ArticleView extends Component {
     componentDidMount() {
         document.body.className = 'posts show';
+        console.log('Article ID ', this.props.match.params.id);
         this.props.getArticle(this.props.match.params.id);
     }
     componentWillUnmount() {
         document.body.className = '';
     }
     render() {
-        const { text, claps, title, feature_img, author, date } = this.props._article;
+        console.log(this.props._article);
+        const { text, claps, title, feature_img, author, date, categories, description } = this.props._article;
         let author_name, author_img, author_id;
         if (author) {
             const { name, provider_pic, _id } = author;
@@ -40,7 +36,7 @@ class ArticleView extends Component {
                                 <img alt={author_name} className="avatar-image" src={author_img} height="40" width="40" />
                                 <div className="post-info">
                                     <div className="PopoverLink" data-react-props=""><span className="popover-link" data-reactroot=""><a href={`/profile/${author_id}`}>{author_name}</a></span></div>
-                                    <small>Published on {date}</small>
+                                    <small>Published on {formatDate(new Date(date))}</small>
                                 </div>
                             </div>
 
@@ -50,13 +46,16 @@ class ArticleView extends Component {
                             <h3 className="title">{title}</h3>
                             <div className="body">
                                 <p></p>
-                                <p className="" dangerouslySetInnerHTML={{ __html: text }}>
+                                <p className="" dangerouslySetInnerHTML={{ __html: description }}>
                                 </p>
                                 <p></p>
                             </div>
                             <div className="post-tags">
-                                <a className="tag" href="">Story</a>
-                                <a className="tag" href="">Community</a>
+                                {
+                                    categories && categories.map(function (tag) {
+                                        return <a className="tag" href="">{tag}</a>
+                                    })
+                                }
                             </div>
                             <div className="post-stats clearfix">
                                 <div className="pull-left">
@@ -113,7 +112,7 @@ class ArticleView extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="post-metadata-bar" data-page="post-metadata-bar">
+                    {/* <div className="post-metadata-bar" data-page="post-metadata-bar">
                         <div className="flex-container is-inView" data-behavior="animated-metadata">
                             <div className="post-stats flex-container">
                                 <div className="like-button-wrapper">
@@ -144,16 +143,19 @@ class ArticleView extends Component {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         );
     }
 }
-
-ArticleView.propTypes = {
-    params: PropTypes.object.isRequired
+const mapStateToProps = state => {
+    return {
+        _article: state.articles.article,
+        user: state.authUser.user
+    }
 }
+
 
 export default connect(mapStateToProps, {
     getArticle,

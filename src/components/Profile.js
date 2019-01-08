@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import FollowButton from './FollowButton';
 import { getUserProfile, follow } from './../redux/actions/actions';
+import { formatDate } from '../utils/customs';
 
 class Profile extends React.Component {
     componentDidMount() {
@@ -65,19 +66,19 @@ function ItemList({ items }) {
                                 <img alt="mark" className="avatar-image" src={items.profile.user.provider_pic} height="40" width="40" />
                                 <div className="post-info">
                                     <div className="PopoverLink"><span className="popover-link" data-reactroot=""><a href="javascript:void(0);">{items.profile.user.name}</a></span></div>
-                                    <small>Published on {article.date}</small>
+                                    <small>Published on {formatDate(new Date(article.date))}</small>
                                 </div>
                             </div>
 
 
-                            {article.feature_img.length > 0 ? <div className="post-picture-wrapper">
+                            {article.feature_img && article.feature_img.length > 0 ? <div className="post-picture-wrapper">
                                 <img src={article.feature_img} alt="alt" />
                             </div> : ''}
 
                             <div className="main-body">
                                 <h3 className="post-title"><a href={`/articleview/${article._id}`}>{article.title}</a></h3>
                                 <div className="post-body">
-                                    <p className="" dangerouslySetInnerHTML={{ __html: article.description }}></p>
+                                    <p className="" dangerouslySetInnerHTML={{ __html: article.text }}></p>
                                 </div>
                                 <a className="read-more" href={`/articleview/${article._id}`}>Read more</a>
                             </div>

@@ -9,8 +9,9 @@ export function loadArticles() {
     return dispatch => {
         api.get('/articles')
             .then((res) => {
+                console.log('Getting articles ', res);
                 let articles = res.data;
-                dispatch({ type: 'LOAD_ARTICLES', articles });
+                dispatch({ type: constants.LOAD_ARTICLE, articles });
             }).catch((err) => {
                 console.log(err);
             })
@@ -28,7 +29,7 @@ export function getUserProfile(_id) {
     return (dispatch) => {
         api.get(`/user/profile/${_id}`).then((res) => {
             let profile = res.data;
-            dispatch({ type: 'SET_PROFILE', profile });
+            dispatch({ type: constants.SET_PROFILE, profile });
         }).catch(err => console.log(err));
     }
 }
@@ -38,7 +39,7 @@ export function getArticle(article_id) {
         api.get(`/article/${article_id}`)
             .then((res) => {
                 let article = res.data;
-                dispatch({ type: 'VIEW_ARTICLE', article });
+                dispatch({ type: constants.VIEW_ARTICLE, article });
             }).catch((err) => console.log(err));
     }
 }
@@ -52,7 +53,8 @@ export function comment() {
 export function clap(article_id) {
     return dispatch => {
         api.post(`/article/clap`, { article_id }).then((res) => {
-            dispatch({ type: 'CLAP_ARTICLE' });
+            if (res.data.status)
+                dispatch({ type: constants.CLAP_ARTICLE, article_id });
         }).catch((err) => console.log(err));
     }
 }
@@ -60,7 +62,7 @@ export function clap(article_id) {
 export function follow(id, user_id) {
     return dispatch => {
         api.post(`/user/follow`, { id, user_id }).then((res) => {
-            dispatch({ type: 'FOLLOW_USER', user_id });
+            dispatch({ type: constants.FOLLOW_USER, user_id });
         }).catch((err) => console.log(err));
     }
 }
@@ -70,7 +72,7 @@ export function SignInUser(user_data) {
         api.post(`/user`, user_data).then((res) => {
             let user = res.data;
             localStorage.setItem('Auth', JSON.stringify(user));
-            dispatch({ type: 'SET_USER', user });
+            dispatch({ type: constants.SET_USER, user });
         }).catch((err) => console.log(err));
     }
 }

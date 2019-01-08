@@ -18,15 +18,19 @@ export default (state = initialState, action) => {
                 article: action.article
             }
         case constants.CLAP_ARTICLE:
-            let article = Object.assign({}, state.article);
-            article.claps++;
-            console.log(article);
+            let articleCopy = state.articles.slice(0);
+            let index = articleCopy.forEach((item, index) => {
+                if (item._id === action.article_id) {
+                    return item;
+                }
+            })
+            articleCopy[index].claps++;
             return {
                 ...state,
-                article: article
+                articles: articleCopy
             }
         case constants.THROW_TOMATO:
-            article = Object.assign({}, state.article);
+            let article = Object.assign({}, state.article);
             article.tomatos++;
             return {
                 ...state,
